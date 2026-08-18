@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOR Review — Feasibility Study</title>
+<style>
+:root{
+  --navy:#1F3864; --navy2:#2a4a80; --light:#eef2fa; --line:#d7dfef;
+  --green:#1e7e34; --amber:#b26a00; --red:#b02a37; --gray:#6b7280;
+  --bg:#f6f8fc; --card:#ffffff;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{font-family:'Segoe UI','Sarabun','TH Sarabun New',Tahoma,sans-serif; background:var(--bg); color:#1c2434; line-height:1.55}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2)); color:#fff; padding:22px 28px; position:sticky; top:0; z-index:50; box-shadow:0 2px 10px rgba(15,30,70,.25)}
+.hrow{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; max-width:1080px; margin:0 auto}
+h1{font-size:1.25rem; font-weight:700}
+.sub{font-size:.85rem; opacity:.85; margin-top:4px; max-width:720px}
+.langsw{display:flex; border:1px solid rgba(255,255,255,.5); border-radius:20px; overflow:hidden; flex-shrink:0}
+.langsw button{background:transparent; color:#fff; border:none; padding:6px 16px; cursor:pointer; font-size:.85rem}
+.langsw button.on{background:#fff; color:var(--navy); font-weight:700}
+main{max-width:1080px; margin:24px auto 80px; padding:0 20px}
+.card{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px 22px; margin-bottom:18px; box-shadow:0 1px 3px rgba(15,30,70,.06)}
+.card h2{color:var(--navy); font-size:1.02rem; margin-bottom:6px}
+.card .desc{font-size:.85rem; color:var(--gray); margin-bottom:12px}
+.how ol{margin:6px 0 0 20px; font-size:.9rem}
+.meta{display:grid; grid-template-columns:2fr 2fr 1fr; gap:12px; margin-top:10px}
+.meta label{font-size:.78rem; color:var(--gray); display:block; margin-bottom:3px}
+.meta input{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:.9rem; font-family:inherit}
+.item{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start; padding:12px 0; border-top:1px solid var(--line)}
+.item:first-of-type{border-top:none}
+.item .lbl{flex:1 1 380px; font-size:.92rem; padding-top:4px}
+.item .lbl .id{color:var(--gray); font-size:.75rem; margin-right:6px}
+.seg{display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; flex-shrink:0}
+.seg button{border:none; background:#fff; padding:7px 13px; font-size:.82rem; cursor:pointer; color:#444; font-family:inherit}
+.seg button:not(:last-child){border-right:1px solid var(--line)}
+.seg button.a.on{background:var(--green); color:#fff}
+.seg button.r.on{background:var(--amber); color:#fff}
+.seg button.x.on{background:var(--red); color:#fff}
+.cmt{flex:1 1 100%; display:none}
+.cmt.show{display:block}
+.cmt textarea{width:100%; min-height:52px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:.88rem; font-family:inherit; resize:vertical; background:#fffdf5}
+.addrow{margin-top:12px}
+.addbtn{background:var(--light); border:1px dashed var(--navy2); color:var(--navy); border-radius:8px; padding:7px 14px; font-size:.85rem; cursor:pointer; font-family:inherit}
+.newf{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center; background:var(--light); padding:8px; border-radius:8px}
+.newf input{flex:1 1 200px; padding:7px 10px; border:1px solid var(--line); border-radius:6px; font-size:.88rem; font-family:inherit}
+.newf .del{background:none; border:none; color:var(--red); cursor:pointer; font-size:.8rem; font-family:inherit; text-decoration:underline}
+.sticky-sum{position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:2px solid var(--navy); padding:10px 20px; z-index:60}
+.sumrow{max-width:1080px; margin:0 auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.bar{flex:1 1 220px; height:10px; background:var(--light); border-radius:6px; overflow:hidden; display:flex}
+.bar .bA{background:var(--green); height:100%}
+.bar .bR{background:var(--amber); height:100%}
+.bar .bX{background:var(--red); height:100%}
+.sumtxt{font-size:.8rem; color:#333; white-space:nowrap}
+.btn{border:none; border-radius:8px; padding:9px 16px; font-size:.86rem; cursor:pointer; font-weight:600; font-family:inherit}
+.btn.pri{background:var(--navy); color:#fff}
+.btn.sec{background:var(--light); color:var(--navy); border:1px solid var(--navy2)}
+.btn.ghost{background:none; color:var(--navy); text-decoration:underline; font-weight:400; padding:9px 6px}
+textarea.gen{width:100%; min-height:90px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:.92rem; font-family:inherit; resize:vertical}
+.ovseg{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.ovseg button{border:1px solid var(--line); background:#fff; border-radius:8px; padding:9px 14px; font-size:.86rem; cursor:pointer; font-family:inherit}
+.ovseg button.on{background:var(--navy); color:#fff; border-color:var(--navy)}
+.pillrow{display:flex; gap:8px; flex-wrap:wrap; font-size:.78rem; margin-top:6px}
+.pill{padding:2px 10px; border-radius:12px}
+.pill.pA{background:#e2f3e6; color:var(--green)} .pill.pR{background:#fdf1dd; color:var(--amber)}
+.pill.pX{background:#fbe3e6; color:var(--red)} .pill.pP{background:var(--light); color:var(--gray)}
+footer{max-width:1080px; margin:0 auto 120px; padding:0 20px; font-size:.78rem; color:var(--gray)}
+@media(max-width:640px){ .meta{grid-template-columns:1fr} .hrow{flex-direction:column} }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <h1 id="hTitle"></h1>
+      <div class="sub" id="hSub"></div>
+    </div>
+    <div class="langsw">
+      <button id="btnTh" onclick="setLang('th')">ไทย</button>
+      <button id="btnEn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="card how">
+    <h2 id="howT"></h2>
+    <ol>
+      <li id="how1"></li><li id="how2"></li><li id="how3"></li><li id="how4"></li>
+    </ol>
+    <div class="meta">
+      <div><label id="lRev"></label><input id="reviewer" oninput="S.reviewer=this.value"></div>
+      <div><label id="lPos"></label><input id="position" oninput="S.position=this.value"></div>
+      <div><label id="lDate"></label><input id="rdate" type="date" oninput="S.date=this.value"></div>
+    </div>
+  </div>
+  <div id="sections"></div>
+  <div class="card">
+    <h2 id="genT"></h2>
+    <textarea class="gen" id="genC" oninput="S.general=this.value"></textarea>
+    <div style="margin-top:14px">
+      <strong id="ovT" style="font-size:.9rem; color:var(--navy)"></strong>
+      <div class="ovseg">
+        <button data-ov="approve" onclick="setOv('approve')" id="ov1"></button>
+        <button data-ov="approve_cond" onclick="setOv('approve_cond')" id="ov2"></button>
+        <button data-ov="revise" onclick="setOv('revise')" id="ov3"></button>
+      </div>
+    </div>
+  </div>
+</main>
+<footer id="foot"></footer>
+<div class="sticky-sum">
+  <div class="sumrow">
+    <span class="sumtxt" id="prog"></span>
+    <div class="bar"><div class="bA" id="bA"></div><div class="bR" id="bR"></div><div class="bX" id="bX"></div></div>
+    <span class="pillrow" id="pills"></span>
+    <button class="btn pri" onclick="exportJson()" id="bJson"></button>
+    <button class="btn sec" onclick="exportCsv()" id="bCsv"></button>
+    <button class="btn ghost" onclick="document.getElementById('imp').click()" id="bImp"></button>
+    <input type="file" id="imp" accept=".json" style="display:none" onchange="importJson(this)">
+  </div>
+</div>
+<script>
+const DATA = {"sections": [{"id": "tor", "title_th": "ส่วนที่ 1: โครงร่างเอกสารฉบับที่ 1 (ขอบเขตของการศึกษา / TOR)", "title_en": "Part 1: Outline of Document No. 1 (Terms of Reference)", "desc_th": "โปรดพิจารณาแต่ละหัวข้อของเอกสาร TOR — เห็นชอบ / ขอแก้ไข (พร้อมระบุรายละเอียด) / ตัดออก", "desc_en": "Please review each TOR section — Approve / Request revision (with details) / Remove", "items": [{"id": "t1", "th": "1. หลักการและเหตุผล — บริบทการเปลี่ยนผ่านพลังงาน (PDP, AEDP, Carbon Neutrality 2593, Net Zero 2608)", "en": "1. Background & Rationale — energy transition context (PDP, AEDP, Carbon Neutrality 2050, Net Zero 2065)"}, {"id": "t2", "th": "2. วัตถุประสงค์ของการศึกษา — ประเมิน 7 มิติ, เปรียบเทียบจัดลำดับ 4 โครงการ, CSF/ความเสี่ยง, Roadmap, รายงาน 2 ฉบับ 2 ภาษา", "en": "2. Objectives — 7-dimension appraisal, prioritization of 4 ventures, CSFs/risks, roadmap, two bilingual reports"}, {"id": "t3", "th": "3. นิยามและขอบเขตของโครงการที่ศึกษา — โรงไฟฟ้าชีวมวล / โรงไฟฟ้าขยะ / Private PPA Solar / สถานีชาร์จ EV", "en": "3. Definitions & venture scope — biomass / waste-to-energy / Private PPA solar / EV charging"}, {"id": "t4", "th": "4. ขอบเขตการศึกษารายมิติ — ตลาด, เทคนิค, กฎหมาย, สิ่งแวดล้อม-สังคม, การเงิน-เศรษฐศาสตร์, ความเสี่ยง, องค์กร", "en": "4. Cross-cutting dimensional scope — market, technical, legal, environmental-social, financial-economic, risk, organizational"}, {"id": "t5", "th": "5. ขอบเขตการศึกษาเฉพาะรายโครงการ — ประเด็นเฉพาะของแต่ละธุรกิจ (เชื้อเพลิง, เทคโนโลยี, สัญญา, ความเสี่ยงเฉพาะ)", "en": "5. Project-specific scope — venture-specific issues (fuel, technology, contracts, specific risks)"}, {"id": "t6", "th": "6. ระเบียบวิธีการศึกษา — ข้อมูลทุติยภูมิ/ปฐมภูมิ + ฐานข้อมูลทะเบียนภาครัฐ (ภาคผนวก ข), PESTEL/SWOT/Five Forces, DCF, MCDA", "en": "6. Methodology — secondary/primary data + government registry database (Annex B), PESTEL/SWOT/Five Forces, DCF, MCDA"}, {"id": "t7", "th": "7. เกณฑ์การประเมินความเป็นไปได้ — Hurdle Criteria (ยืนยันค่าตัวเลขร่วมกับผู้บริหารในช่วง Inception)", "en": "7. Feasibility & investment criteria — hurdle criteria (thresholds to be confirmed with management at inception)"}, {"id": "t8", "th": "8. ผลงานที่ต้องส่งมอบ — เอกสาร 2 ฉบับ ไทย-อังกฤษ", "en": "8. Deliverables — two documents, Thai and English"}, {"id": "t9", "th": "9. กรอบระยะเวลาดำเนินการ", "en": "9. Indicative timeline"}, {"id": "t10", "th": "ภาคผนวก ก: โครงสร้างรายงานฉบับสมบูรณ์ (สารบัญที่เสนอ 10 บท)", "en": "Annex A: structure of the final report (proposed 10-chapter table of contents)"}, {"id": "t11", "th": "ระบบอ้างอิง: เชิงอรรถ (footnote) รายหน้า + เอกสารอ้างอิงท้ายเล่ม", "en": "Citation system: per-page footnotes + end-of-report reference list"}, {"id": "t12", "th": "ภาคผนวก ข: โครงสร้างฐานข้อมูลโครงการที่ขึ้นทะเบียนกับหน่วยงานรัฐ (รายละเอียดส่วนที่ 2)", "en": "Annex B: government-registered project database structure (details in Part 2)"}]}, {"id": "common", "title_th": "ส่วนที่ 2.1: โครงสร้างข้อมูลร่วม (ทุกชุดข้อมูล)", "title_en": "Part 2.1: Common Data Structure (all datasets)", "desc_th": "เขตข้อมูล (field) ที่จะจัดเก็บสำหรับทุกโครงการ ทุกประเภท", "desc_en": "Fields recorded for every project in every dataset", "items": [{"id": "c-1", "th": "รหัสโครงการ", "en": "Project ID"}, {"id": "c-2", "th": "ชื่อโครงการ", "en": "Project name"}, {"id": "c-3", "th": "ผู้ประกอบการ (นิติบุคคล)", "en": "Operator (legal entity)"}, {"id": "c-4", "th": "เลขทะเบียนนิติบุคคล", "en": "Company registration no."}, {"id": "c-5", "th": "ที่ตั้ง (ตำบล / อำเภอ / จังหวัด)", "en": "Location (sub-district / district / province)"}, {"id": "c-6", "th": "พิกัดภูมิศาสตร์ (ละติจูด, ลองจิจูด)", "en": "GPS coordinates (latitude, longitude)"}, {"id": "c-7", "th": "สถานะโครงการ (พัฒนา / ก่อสร้าง / COD / หยุดดำเนินการ)", "en": "Project status (development / construction / COD / suspended)"}, {"id": "c-8", "th": "หน่วยงานที่ขึ้นทะเบียนและประเภทใบอนุญาต", "en": "Registering agency and licence type"}, {"id": "c-9", "th": "เลขที่ใบอนุญาต", "en": "Licence number"}, {"id": "c-10", "th": "วันที่ออกและวันหมดอายุใบอนุญาต", "en": "Licence issue and expiry dates"}, {"id": "c-11", "th": "สิทธิประโยชน์ BOI (ถ้ามี)", "en": "BOI incentives (if any)"}, {"id": "c-12", "th": "วันที่ปรับปรุงข้อมูลล่าสุด", "en": "Data last updated"}, {"id": "c-13", "th": "แหล่งที่มาของข้อมูล (URL / เอกสาร)", "en": "Data source (URL / document)"}, {"id": "c-14", "th": "หมายเหตุ", "en": "Remarks"}]}, {"id": "b1", "title_th": "ส่วนที่ 2.2: ข.1 ชุดข้อมูลโครงการโรงไฟฟ้าชีวมวล", "title_en": "Part 2.2: B.1 Biomass Power Plant Dataset", "desc_th": "เขตข้อมูลเพิ่มเติมเฉพาะโครงการโรงไฟฟ้าชีวมวล", "desc_en": "Additional fields specific to biomass power plants", "items": [{"id": "b1-1", "th": "กำลังผลิตติดตั้ง (เมกะวัตต์)", "en": "Installed capacity (MW)"}, {"id": "b1-2", "th": "ปริมาณพลังไฟฟ้าเสนอขายตามสัญญา (เมกะวัตต์)", "en": "Contracted capacity (MW)"}, {"id": "b1-3", "th": "เทคโนโลยี (เผาไหม้โดยตรง / สโตกเกอร์ / ฟลูอิไดซ์เบด / แก๊สซิฟิเคชัน)", "en": "Technology (direct combustion / stoker / fluidized bed / gasification)"}, {"id": "b1-4", "th": "ชนิดเชื้อเพลิงชีวมวลหลักและรอง", "en": "Primary and secondary biomass fuel types"}, {"id": "b1-5", "th": "ปริมาณการใช้เชื้อเพลิงต่อปี (ตัน)", "en": "Annual fuel consumption (tonnes)"}, {"id": "b1-6", "th": "ค่าความร้อนเชื้อเพลิงเฉลี่ย (เมกะจูล/กิโลกรัม)", "en": "Average fuel heating value (MJ/kg)"}, {"id": "b1-7", "th": "รูปแบบสัญญาซื้อขายไฟฟ้า (FiT / Adder / สัญญาทวิภาคี)", "en": "Offtake scheme (FiT / Adder / bilateral PPA)"}, {"id": "b1-8", "th": "อัตรารับซื้อไฟฟ้า (บาท/หน่วย)", "en": "Purchase tariff (THB/kWh)"}, {"id": "b1-9", "th": "คู่สัญญารับซื้อไฟฟ้า (กฟผ. / กฟภ. / กฟน. / เอกชน)", "en": "Offtaker (EGAT / PEA / MEA / private)"}, {"id": "b1-10", "th": "วันที่จ่ายไฟฟ้าเข้าระบบเชิงพาณิชย์ (COD)", "en": "Commercial operation date (COD)"}]}, {"id": "b2", "title_th": "ส่วนที่ 2.3: ข.2 ชุดข้อมูลโครงการโรงไฟฟ้าพลังงานขยะ", "title_en": "Part 2.3: B.2 Waste-to-Energy Power Plant Dataset", "desc_th": "เขตข้อมูลเพิ่มเติมเฉพาะโครงการโรงไฟฟ้าพลังงานขยะ", "desc_en": "Additional fields specific to waste-to-energy plants", "items": [{"id": "b2-1", "th": "กำลังผลิตติดตั้ง (เมกะวัตต์)", "en": "Installed capacity (MW)"}, {"id": "b2-2", "th": "เทคโนโลยี (ตะกรับเคลื่อนที่ / RDF / แก๊สซิฟิเคชัน / หมักย่อยไร้อากาศ)", "en": "Technology (moving grate / RDF / gasification / anaerobic digestion)"}, {"id": "b2-3", "th": "ปริมาณขยะเข้าระบบ (ตัน/วัน)", "en": "Waste throughput (tonnes/day)"}, {"id": "b2-4", "th": "องค์กรปกครองส่วนท้องถิ่นคู่สัญญา", "en": "Contracting local government organization"}, {"id": "b2-5", "th": "รูปแบบความร่วมมือรัฐ-เอกชน (PPP)", "en": "Public-private partnership model"}, {"id": "b2-6", "th": "ค่ากำจัดขยะ Tipping Fee (บาท/ตัน)", "en": "Tipping fee (THB/tonne)"}, {"id": "b2-7", "th": "อัตรารับซื้อไฟฟ้า FiT (บาท/หน่วย)", "en": "FiT purchase tariff (THB/kWh)"}, {"id": "b2-8", "th": "สถานะ EIA / CoP", "en": "EIA / CoP status"}, {"id": "b2-9", "th": "วันที่จ่ายไฟฟ้าเข้าระบบเชิงพาณิชย์ (COD)", "en": "Commercial operation date (COD)"}]}, {"id": "b3", "title_th": "ส่วนที่ 2.4: ข.3 ชุดข้อมูลโครงการ Private PPA Solar", "title_en": "Part 2.4: B.3 Private PPA Solar Dataset", "desc_th": "เขตข้อมูลเพิ่มเติมเฉพาะโครงการ Private PPA Solar", "desc_en": "Additional fields specific to Private PPA solar projects", "items": [{"id": "b3-1", "th": "ผู้รับซื้อไฟฟ้า (Off-taker) และประเภทธุรกิจ", "en": "Off-taker and business sector"}, {"id": "b3-2", "th": "ประเภทการติดตั้ง (บนหลังคา / บนพื้นดิน / ลอยน้ำ)", "en": "Installation type (rooftop / ground-mounted / floating)"}, {"id": "b3-3", "th": "ขนาดติดตั้ง (กิโลวัตต์สูงสุด / เมกะวัตต์)", "en": "Installed capacity (kWp / MW)"}, {"id": "b3-4", "th": "รูปแบบสัญญา (Private PPA / เช่าระบบ / EPC)", "en": "Contract model (Private PPA / leasing / EPC)"}, {"id": "b3-5", "th": "อายุสัญญา (ปี)", "en": "Contract tenor (years)"}, {"id": "b3-6", "th": "โครงสร้างราคา (ส่วนลดจากอัตราการไฟฟ้า ร้อยละ)", "en": "Pricing structure (discount-to-grid, %)"}, {"id": "b3-7", "th": "สัดส่วนการใช้ไฟฟ้าเอง (ร้อยละ)", "en": "Self-consumption ratio (%)"}, {"id": "b3-8", "th": "ระบบกักเก็บพลังงาน BESS (มี / ไม่มี, ขนาด)", "en": "Battery energy storage (yes / no, size)"}, {"id": "b3-9", "th": "วันที่เริ่มจ่ายไฟฟ้า (COD)", "en": "Commercial operation date (COD)"}]}, {"id": "b4", "title_th": "ส่วนที่ 2.5: ข.4 ชุดข้อมูลสถานีอัดประจุยานยนต์ไฟฟ้า", "title_en": "Part 2.5: B.4 EV Charging Station Dataset", "desc_th": "เขตข้อมูลเพิ่มเติมเฉพาะสถานีอัดประจุยานยนต์ไฟฟ้า", "desc_en": "Additional fields specific to EV charging stations", "items": [{"id": "b4-1", "th": "ผู้ให้บริการ / แบรนด์", "en": "Operator / brand"}, {"id": "b4-2", "th": "ประเภทที่ตั้ง (สถานีบริการน้ำมัน / ศูนย์การค้า / อาคารสำนักงาน / ทางหลวง / อื่น ๆ)", "en": "Site type (fuel station / mall / office / highway / other)"}, {"id": "b4-3", "th": "จำนวนหัวจ่ายกระแสสลับ (AC)", "en": "Number of AC connectors"}, {"id": "b4-4", "th": "จำนวนหัวจ่ายกระแสตรง (DC)", "en": "Number of DC connectors"}, {"id": "b4-5", "th": "กำลังไฟฟ้าสูงสุดต่อหัวจ่าย (กิโลวัตต์)", "en": "Maximum power per connector (kW)"}, {"id": "b4-6", "th": "มาตรฐานหัวจ่าย (Type 2 / CCS2 / CHAdeMO)", "en": "Connector standards (Type 2 / CCS2 / CHAdeMO)"}, {"id": "b4-7", "th": "ระบบบริหารจัดการสถานี (CSMS) / แพลตฟอร์ม", "en": "Charging station management system (CSMS) / platform"}, {"id": "b4-8", "th": "อัตราค่าบริการอัดประจุ (บาท/หน่วย)", "en": "Charging service tariff (THB/kWh)"}, {"id": "b4-9", "th": "การใช้มิเตอร์อัตรา Low Priority (ใช่ / ไม่ใช่)", "en": "Low Priority tariff meter (yes / no)"}, {"id": "b4-10", "th": "วันที่เปิดให้บริการ", "en": "Service commencement date"}]}, {"id": "src", "title_th": "ส่วนที่ 2.6: แหล่งข้อมูลทะเบียนภาครัฐหลัก", "title_en": "Part 2.6: Principal Government Registry Sources", "desc_th": "หน่วยงานและทะเบียนที่จะใช้เป็นแหล่งข้อมูล", "desc_en": "Agencies and registers to be used as data sources", "items": [{"id": "s-1", "th": "สำนักงาน กกพ. — ระบบใบอนุญาตด้านพลังงาน (ใบอนุญาตผลิตไฟฟ้า) และข้อมูลการรับซื้อไฟฟ้า FiT", "en": "Office of the ERC — energy licensing system (electricity generation licences) and FiT procurement data"}, {"id": "s-2", "th": "กฟผ. / กฟภ. / กฟน. — ทะเบียนผู้ผลิตไฟฟ้ารายเล็ก (SPP) และรายเล็กมาก (VSPP)", "en": "EGAT / PEA / MEA — SPP and VSPP power producer registers"}, {"id": "s-3", "th": "กรมโรงงานอุตสาหกรรม — ระบบข้อมูลโรงงาน (ใบอนุญาต รง.4)", "en": "Department of Industrial Works — factory database (Ror.Ngor.4 licences)"}, {"id": "s-4", "th": "กรมพัฒนาพลังงานทดแทนและอนุรักษ์พลังงาน (พพ.) — สถิติพลังงานทดแทน", "en": "DEDE — renewable energy statistics"}, {"id": "s-5", "th": "สำนักงานคณะกรรมการส่งเสริมการลงทุน (BOI) — ข้อมูลโครงการที่ได้รับส่งเสริมการลงทุน", "en": "BOI — register of promoted investment projects"}, {"id": "s-6", "th": "สนพ. / กฟภ. / กฟน. — ข้อมูลสถานีอัดประจุไฟฟ้าและมิเตอร์อัตรา Low Priority", "en": "EPPO / PEA / MEA — EV charging station data and Low Priority tariff meters"}, {"id": "s-7", "th": "กรมพัฒนาธุรกิจการค้า — ข้อมูลนิติบุคคลและงบการเงินของผู้ประกอบการ", "en": "Department of Business Development — corporate registration and financial statements"}]}, {"id": "qa", "title_th": "ส่วนที่ 2.7: การควบคุมคุณภาพข้อมูล", "title_en": "Part 2.7: Data Quality Assurance", "desc_th": "กติกาการจัดการคุณภาพของฐานข้อมูล", "desc_en": "Rules governing database quality", "items": [{"id": "q-1", "th": "บันทึกวันที่สืบค้นและรุ่นของข้อมูล (data version) ทุกครั้งที่ปรับปรุง", "en": "Record the retrieval date and data version at every update"}, {"id": "q-2", "th": "ตรวจสอบข้ามแหล่งข้อมูล (data triangulation) อย่างน้อย 2 แหล่งต่อรายการสำคัญ", "en": "Cross-validate critical records against at least two sources (data triangulation)"}, {"id": "q-3", "th": "อ้างอิงแหล่งที่มาในเชิงอรรถของหน้าที่ใช้ข้อมูล และในรายการเอกสารอ้างอิงท้ายเล่ม ตามข้อกำหนดการอ้างอิงของการศึกษานี้", "en": "Cite sources in page footnotes and in the end-of-report reference list, per this study's citation requirements"}, {"id": "q-4", "th": "กำหนดผู้รับผิดชอบข้อมูล (data steward) ของแต่ละชุดข้อมูล", "en": "Assign a data steward for each dataset"}]}]};
+const UI = {"th": {"docTitle": "แบบทบทวนขอบเขตการศึกษา (TOR) และโครงสร้างฐานข้อมูล", "subtitle": "การศึกษาความเป็นไปได้ โครงการลงทุนธุรกิจพลังงาน 4 ประเภท — เอกสารฉบับที่ 1 เสนอเพื่อพิจารณาก่อนขออนุมัติ", "howTitle": "วิธีใช้งาน", "how1": "เลือกผลการพิจารณาของแต่ละหัวข้อ: เห็นชอบ / แก้ไข / ตัดออก และพิมพ์ความเห็นหรือข้อความที่ต้องการแก้ไขในช่องความเห็น", "how2": "เพิ่มเขตข้อมูลใหม่ได้ในแต่ละชุดข้อมูล (ปุ่ม “+ เพิ่มเขตข้อมูล”)", "how3": "เมื่อพิจารณาครบแล้ว กด “ส่งออกผลการทบทวน (JSON)” แล้วส่งไฟล์กลับให้คณะผู้ศึกษา เพื่อนำไปปรับปรุงเอกสารฉบับที่ 1 ก่อนขออนุมัติ", "how4": "ข้อมูลไม่ถูกบันทึกอัตโนมัติ — โปรดส่งออกไฟล์ก่อนปิดหน้านี้ (สามารถนำเข้าไฟล์ JSON เดิมเพื่อทบทวนต่อได้)", "reviewer": "ชื่อผู้พิจารณา", "position": "ตำแหน่ง / หน่วยงาน", "date": "วันที่", "approve": "เห็นชอบ", "revise": "แก้ไข", "remove": "ตัดออก", "commentPh": "ความเห็น / ข้อความที่ต้องการให้แก้ไข…", "addField": "+ เพิ่มเขตข้อมูล", "newFieldPh": "ชื่อเขตข้อมูลใหม่…", "newFieldNote": "เหตุผล / รายละเอียด…", "delete": "ลบ", "generalTitle": "ความเห็นโดยรวม / เงื่อนไขการอนุมัติ", "generalPh": "ความเห็นโดยรวมต่อเอกสารฉบับที่ 1 และฐานข้อมูล…", "overall": "ผลการพิจารณาโดยรวม", "ovApprove": "อนุมัติให้ดำเนินการ", "ovApproveCond": "อนุมัติโดยมีเงื่อนไข (ตามความเห็น)", "ovRevise": "ให้แก้ไขและเสนอใหม่", "progress": "ความคืบหน้าการทบทวน", "exportJson": "ส่งออกผลการทบทวน (JSON)", "exportCsv": "ส่งออกสรุป (CSV)", "importJson": "นำเข้าไฟล์ทบทวนเดิม", "reviewed": "พิจารณาแล้ว", "of": "จาก", "itemsWord": "หัวข้อ", "sumApprove": "เห็นชอบ", "sumRevise": "แก้ไข", "sumRemove": "ตัดออก", "sumPending": "ยังไม่พิจารณา", "confirmExport": "ยังมีหัวข้อที่ไม่ได้พิจารณา ต้องการส่งออกหรือไม่?", "footer": "จัดทำโดยคณะผู้ศึกษา — ผลการทบทวนจะถูกนำไปปรับปรุงเอกสารฉบับที่ 1 (TOR) และแม่แบบฐานข้อมูล ก่อนเสนอขออนุมัติ"}, "en": {"docTitle": "TOR & Database Structure Review Form", "subtitle": "Project Feasibility Study of Four Energy Ventures — Document No. 1, submitted for consideration prior to approval", "howTitle": "How to use", "how1": "For each item choose: Approve / Revise / Remove, and type your comment or requested wording in the comment box", "how2": "You may add new fields to any dataset (“+ Add field” button)", "how3": "When finished, click “Export review (JSON)” and return the file to the study team; it will be incorporated into Document No. 1 before the approval request", "how4": "Data is not saved automatically — please export before closing this page (you can re-import a previous JSON file to continue)", "reviewer": "Reviewer name", "position": "Position / organization", "date": "Date", "approve": "Approve", "revise": "Revise", "remove": "Remove", "commentPh": "Comment / requested revision…", "addField": "+ Add field", "newFieldPh": "New field name…", "newFieldNote": "Reason / details…", "delete": "Delete", "generalTitle": "Overall Comments / Conditions of Approval", "generalPh": "Overall comments on Document No. 1 and the database…", "overall": "Overall decision", "ovApprove": "Approve to proceed", "ovApproveCond": "Approve with conditions (per comments)", "ovRevise": "Revise and resubmit", "progress": "Review progress", "exportJson": "Export review (JSON)", "exportCsv": "Export summary (CSV)", "importJson": "Import previous review", "reviewed": "Reviewed", "of": "of", "itemsWord": "items", "sumApprove": "Approved", "sumRevise": "Revise", "sumRemove": "Removed", "sumPending": "Pending", "confirmExport": "Some items have not been reviewed. Export anyway?", "footer": "Prepared by the study team — review results will be incorporated into Document No. 1 (TOR) and the database template before the approval request"}};
+let LANG = 'th';
+const S = { reviewer:'', position:'', date:'', general:'', overall:'', items:{}, additions:{} };
+DATA.sections.forEach(sec => { S.additions[sec.id] = []; sec.items.forEach(it => { S.items[it.id] = {decision:'', comment:''}; }); });
+
+function t(k){ return UI[LANG][k]; }
+
+function render(){
+  document.getElementById('hTitle').textContent = t('docTitle');
+  document.getElementById('hSub').textContent = t('subtitle');
+  document.getElementById('howT').textContent = t('howTitle');
+  ['how1','how2','how3','how4'].forEach(k => document.getElementById(k).textContent = t(k));
+  document.getElementById('lRev').textContent = t('reviewer');
+  document.getElementById('lPos').textContent = t('position');
+  document.getElementById('lDate').textContent = t('date');
+  document.getElementById('genT').textContent = t('generalTitle');
+  document.getElementById('genC').placeholder = t('generalPh');
+  document.getElementById('ovT').textContent = t('overall');
+  document.getElementById('ov1').textContent = t('ovApprove');
+  document.getElementById('ov2').textContent = t('ovApproveCond');
+  document.getElementById('ov3').textContent = t('ovRevise');
+  document.getElementById('bJson').textContent = t('exportJson');
+  document.getElementById('bCsv').textContent = t('exportCsv');
+  document.getElementById('bImp').textContent = t('importJson');
+  document.getElementById('foot').textContent = t('footer');
+  document.getElementById('btnTh').className = LANG==='th' ? 'on' : '';
+  document.getElementById('btnEn').className = LANG==='en' ? 'on' : '';
+
+  const host = document.getElementById('sections');
+  host.innerHTML = '';
+  DATA.sections.forEach(sec => {
+    const card = document.createElement('div'); card.className='card';
+    card.innerHTML = `<h2>${sec['title_'+LANG]}</h2><div class="desc">${sec['desc_'+LANG]}</div>`;
+    sec.items.forEach(it => {
+      const st = S.items[it.id];
+      const row = document.createElement('div'); row.className='item';
+      row.innerHTML = `
+        <div class="lbl">${it[LANG]}</div>
+        <div class="seg">
+          <button class="a ${st.decision==='approve'?'on':''}" onclick="setDec('${it.id}','approve')">${t('approve')}</button>
+          <button class="r ${st.decision==='revise'?'on':''}" onclick="setDec('${it.id}','revise')">${t('revise')}</button>
+          <button class="x ${st.decision==='remove'?'on':''}" onclick="setDec('${it.id}','remove')">${t('remove')}</button>
+        </div>
+        <div class="cmt ${ (st.decision==='revise'||st.decision==='remove'||st.comment) ? 'show':''}">
+          <textarea placeholder="${t('commentPh')}" oninput="S.items['${it.id}'].comment=this.value">${st.comment}</textarea>
+        </div>`;
+      card.appendChild(row);
+    });
+    if(sec.id !== 'tor'){
+      const add = document.createElement('div'); add.className='addrow';
+      add.innerHTML = `<button class="addbtn" onclick="addField('${sec.id}')">${t('addField')}</button><div id="add-${sec.id}"></div>`;
+      card.appendChild(add);
+    }
+    host.appendChild(card);
+    if(sec.id !== 'tor') renderAdds(sec.id);
+  });
+  document.getElementById('reviewer').value = S.reviewer;
+  document.getElementById('position').value = S.position;
+  document.getElementById('rdate').value = S.date;
+  document.getElementById('genC').value = S.general;
+  document.querySelectorAll('.ovseg button').forEach(b => b.classList.toggle('on', b.dataset.ov === S.overall));
+  updateSummary();
+}
+
+function renderAdds(secId){
+  const host = document.getElementById('add-'+secId);
+  host.innerHTML = '';
+  S.additions[secId].forEach((f, i) => {
+    const d = document.createElement('div'); d.className='newf';
+    d.innerHTML = `
+      <input placeholder="${t('newFieldPh')}" value="${f.label.replace(/"/g,'&quot;')}" oninput="S.additions['${secId}'][${i}].label=this.value">
+      <input placeholder="${t('newFieldNote')}" value="${f.note.replace(/"/g,'&quot;')}" oninput="S.additions['${secId}'][${i}].note=this.value">
+      <button class="del" onclick="S.additions['${secId}'].splice(${i},1); render()">${t('delete')}</button>`;
+    host.appendChild(d);
+  });
+}
+
+function setDec(id, d){
+  S.items[id].decision = (S.items[id].decision === d) ? '' : d;
+  render();
+}
+function setOv(v){ S.overall = (S.overall===v)?'':v; render(); }
+function addField(secId){ S.additions[secId].push({label:'', note:''}); render(); }
+function setLang(l){ LANG = l; document.documentElement.lang = l; render(); }
+
+function counts(){
+  let a=0,r=0,x=0,p=0;
+  Object.values(S.items).forEach(v => {
+    if(v.decision==='approve') a++;
+    else if(v.decision==='revise') r++;
+    else if(v.decision==='remove') x++;
+    else p++;
+  });
+  return {a,r,x,p,total:a+r+x+p};
+}
+function updateSummary(){
+  const c = counts();
+  document.getElementById('prog').textContent = `${t('progress')}: ${c.total-c.p} ${t('of')} ${c.total} ${t('itemsWord')}`;
+  document.getElementById('bA').style.width = (100*c.a/c.total)+'%';
+  document.getElementById('bR').style.width = (100*c.r/c.total)+'%';
+  document.getElementById('bX').style.width = (100*c.x/c.total)+'%';
+  document.getElementById('pills').innerHTML =
+    `<span class="pill pA">${t('sumApprove')} ${c.a}</span><span class="pill pR">${t('sumRevise')} ${c.r}</span>`+
+    `<span class="pill pX">${t('sumRemove')} ${c.x}</span><span class="pill pP">${t('sumPending')} ${c.p}</span>`;
+}
+
+function payload(){
+  const items = [];
+  DATA.sections.forEach(sec => sec.items.forEach(it => {
+    const v = S.items[it.id];
+    items.push({id:it.id, section:sec.id, label_th:it.th, label_en:it.en, decision:v.decision, comment:v.comment});
+  }));
+  return {
+    document:'TOR Review — Feasibility Study of Four Energy Ventures',
+    version:'1.0',
+    exported_at:new Date().toISOString(),
+    reviewer:S.reviewer, position:S.position, review_date:S.date,
+    overall_decision:S.overall, general_comment:S.general,
+    items, additions:S.additions
+  };
+}
+function dl(name, text, type){
+  const b = new Blob(["\ufeff"+text], {type});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a'); a.href=u; a.download=name; a.click();
+  URL.revokeObjectURL(u);
+}
+function stamp(){ return new Date().toISOString().slice(0,10); }
+function exportJson(){
+  const c = counts();
+  if(c.p>0 && !confirm(t('confirmExport'))) return;
+  dl(`TOR_Review_${(S.reviewer||'owner').replace(/\s+/g,'_')}_${stamp()}.json`, JSON.stringify(payload(),null,2), 'application/json');
+}
+function exportCsv(){
+  const c = counts();
+  if(c.p>0 && !confirm(t('confirmExport'))) return;
+  const p = payload();
+  const esc = s => '"'+String(s||'').replace(/"/g,'""')+'"';
+  let rows = [['id','section','item_th','item_en','decision','comment'].join(',')];
+  p.items.forEach(it => rows.push([it.id,it.section,esc(it.label_th),esc(it.label_en),it.decision,esc(it.comment)].join(',')));
+  Object.entries(p.additions).forEach(([sec, arr]) => arr.forEach((f,i) => {
+    if(f.label) rows.push([`add-${sec}-${i+1}`, sec, esc(f.label), '', 'addition', esc(f.note)].join(','));
+  }));
+  rows.push(['overall','',esc(''),'',p.overall_decision,esc(p.general_comment)].join(','));
+  dl(`TOR_Review_${(S.reviewer||'owner').replace(/\s+/g,'_')}_${stamp()}.csv`, rows.join('\r\n'), 'text/csv;charset=utf-8');
+}
+function importJson(inp){
+  const f = inp.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try{
+      const p = JSON.parse(rd.result);
+      S.reviewer = p.reviewer||''; S.position = p.position||''; S.date = p.review_date||'';
+      S.general = p.general_comment||''; S.overall = p.overall_decision||'';
+      (p.items||[]).forEach(it => { if(S.items[it.id]) S.items[it.id] = {decision:it.decision||'', comment:it.comment||''}; });
+      if(p.additions) Object.keys(S.additions).forEach(k => { if(p.additions[k]) S.additions[k] = p.additions[k]; });
+      render();
+    }catch(e){ console.log('import failed', e); }
+  };
+  rd.readAsText(f);
+  inp.value='';
+}
+render();
+</script>
+</body>
+</html>
