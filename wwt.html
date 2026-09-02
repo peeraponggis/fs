@@ -36,9 +36,11 @@
     }
 
     const ATTEMPTS = [
-      { name: 'ต่อตรง (ไม่ผ่าน proxy)', build: url => url },
-      { name: 'allorigins.win', build: url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url) }
-    ];
+  { name: 'ต่อตรง (ไม่ผ่าน proxy)', build: url => url },
+  { name: 'corsproxy.io', build: url => 'https://corsproxy.io/?url=' + encodeURIComponent(url) },
+  { name: 'codetabs', build: url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url) },
+  { name: 'allorigins.win', build: url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url) }
+];
 
     async function fetchWithFallback(targetUrl) {
       let lastError;
