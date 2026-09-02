@@ -24,7 +24,6 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     const DATASET_ID = 'wastewater-treatment-system';
-
     const map = L.map('map').setView([13.7563, 100.5018], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap'
@@ -36,7 +35,6 @@
       console.log(msg);
     }
 
-    // ลำดับที่จะลอง: 1) ต่อตรงไม่ผ่าน proxy  2) allorigins เป็น fallback
     const ATTEMPTS = [
       { name: 'ต่อตรง (ไม่ผ่าน proxy)', build: url => url },
       { name: 'allorigins.win', build: url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url) }
@@ -57,6 +55,7 @@
         } catch (err) {
           lastError = err;
           log('⚠️ ล้มเหลว (' + attempt.name + '): ' + err.message);
+          console.error(attempt.name, err);
         }
       }
       throw lastError;
@@ -83,7 +82,6 @@
         records.forEach(item => {
           const lat = parseFloat(item.lat || item.latitude || item.ละติจูด);
           const lng = parseFloat(item.long || item.lng || item.longitude || item.ลองจิจูด);
-
           if (!isNaN(lat) && !isNaN(lng)) {
             const popupHtml = Object.entries(item)
               .filter(([k]) => k !== '_id')
@@ -101,12 +99,15 @@
 
       } catch (err) {
         log('❌ ล้มเหลวทั้งหมด: ' + err.message);
-        log('ℹ️ อาจต้องเปิด F12 > Console ดู error CORS แบบเต็ม');
         statusEl.style.background = '#ffe0e0';
       }
     }
 
     main();
   </script>
+
+  <!-- Debug console สำหรับมือถือ -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
 </body>
 </html>
