@@ -23,7 +23,6 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    const API_KEY = 'zOoOxG4S85wGDC4oAde4Whd7NIoWVU2f';
     const DATASET_ID = 'wastewater-treatment-system';
 
     const map = L.map('map').setView([13.7563, 100.5018], 6);
@@ -37,25 +36,27 @@
       console.log(msg);
     }
 
-    // proxy หลายตัว ลองเรียงตามลำดับ ถ้าตัวแรก fail ไปตัวถัดไป
-    const PROXIES = [
-      url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-      url => 'https://corsproxy.io/?url=' + encodeURIComponent(url),
-      url => 'https://thingproxy.freeboard.io/fetch/' + url
+    // ลำดับที่จะลอง: 1) ต่อตรงไม่ผ่าน proxy  2) allorigins เป็น fallback
+    const ATTEMPTS = [
+      { name: 'ต่อตรง (ไม่ผ่าน proxy)', build: url => url },
+      { name: 'allorigins.win', build: url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url) }
     ];
 
-    async function fetchWithProxies(targetUrl, options = {}) {
+    async function fetchWithFallback(targetUrl) {
       let lastError;
-      for (const buildProxyUrl of PROXIES) {
-        const proxyUrl = buildProxyUrl(targetUrl);
+      for (const attempt of ATTEMPTS) {
+        const finalUrl = attempt.build(targetUrl);
         try {
-          log('⏳ ลอง proxy: ' + proxyUrl.split('/')[2]);
-          const res = await fetch(proxyUrl, options);
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          return await res.json();
+          log('⏳ ลอง: ' + attempt.name);
+          const res = await fetch(finalUrl);
+          log('   -> HTTP status: ' + res.status);
+          if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+          const json = await res.json();
+          log('✅ สำเร็จผ่าน: ' + attempt.name);
+          return json;
         } catch (err) {
           lastError = err;
-          log('⚠️ ล้มเหลว: ' + err.message);
+          log('⚠️ ล้มเหลว (' + attempt.name + '): ' + err.message);
         }
       }
       throw lastError;
@@ -65,9 +66,7 @@
       try {
         statusEl.innerText = '🔄 เริ่มดึงข้อมูล package...';
         const packageUrl = `https://data.go.th/api/3/action/package_show?id=${DATASET_ID}`;
-        const pkg = await fetchWithProxies(packageUrl, {
-          headers: { 'API-KEY': API_KEY }
-        });
+        const pkg = await fetchWithFallback(packageUrl);
 
         const resources = pkg.result.resources;
         if (!resources || resources.length === 0) throw new Error('ไม่พบ resource ใน dataset นี้');
@@ -75,9 +74,7 @@
         log('✅ พบ resource_id: ' + resourceId);
 
         const dataUrl = `https://data.go.th/api/3/action/datastore_search?resource_id=${resourceId}&limit=1000`;
-        const data = await fetchWithProxies(dataUrl, {
-          headers: { 'API-KEY': API_KEY }
-        });
+        const data = await fetchWithFallback(dataUrl);
 
         const records = data.result.records;
         let count = 0;
@@ -100,10 +97,11 @@
 
         if (bounds.length > 0) map.fitBounds(bounds, { padding: [30, 30] });
         log(`✅ สำเร็จ! แสดง ${count} จุด จากทั้งหมด ${records.length} รายการ`);
-        setTimeout(() => statusEl.style.display = 'none', 5000);
+        setTimeout(() => statusEl.style.display = 'none', 6000);
 
       } catch (err) {
         log('❌ ล้มเหลวทั้งหมด: ' + err.message);
+        log('ℹ️ อาจต้องเปิด F12 > Console ดู error CORS แบบเต็ม');
         statusEl.style.background = '#ffe0e0';
       }
     }
