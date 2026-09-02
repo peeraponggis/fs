@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>แผนที่น้ำเสียไทย</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: sans-serif; }
+    #map { height: 100vh; width: 100vw; }
+    #status {
+      position: absolute; top: 10px; left: 10px; right: 10px; z-index: 999;
+      background: rgba(255,255,255,0.95); padding: 10px 14px; border-radius: 8px;
+      font-size: 13px; line-height: 1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      max-height: 40vh; overflow-y: auto; white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="status">🔄 กำลังเริ่มทำงาน...</div>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const API_KEY = 'zOoOxG4S85wGDC4oAde4Whd7NIoWVU2f';
+    const DATASET_ID = 'wastewater-treatment-system';
+
+    const map = L.map('map').setView([13.7563, 100.5018], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const statusEl = document.getElementById('status');
+    function log(msg) {
+      statusEl.innerText += '\n' + msg;
+      console.log(msg);
+    }
+
+    // proxy หลายตัว ลองเรียงตามลำดับ ถ้าตัวแรก fail ไปตัวถัดไป
+    const PROXIES = [
+      url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+      url => 'https://corsproxy.io/?url=' + encodeURIComponent(url),
+      url => 'https://thingproxy.freeboard.io/fetch/' + url
+    ];
+
+    async function fetchWithProxies(targetUrl, options = {}) {
+      let lastError;
+      for (const buildProxyUrl of PROXIES) {
+        const proxyUrl = buildProxyUrl(targetUrl);
+        try {
+          log('⏳ ลอง proxy: ' + proxyUrl.split('/')[2]);
+          const res = await fetch(proxyUrl, options);
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return await res.json();
+        } catch (err) {
+          lastError = err;
+          log('⚠️ ล้มเหลว: ' + err.message);
+        }
+      }
+      throw lastError;
+    }
+
+    async function main() {
+      try {
+        statusEl.innerText = '🔄 เริ่มดึงข้อมูล package...';
+        const packageUrl = `https://data.go.th/api/3/action/package_show?id=${DATASET_ID}`;
+        const pkg = await fetchWithProxies(packageUrl, {
+          headers: { 'API-KEY': API_KEY }
+        });
+
+        const resources = pkg.result.resources;
+        if (!resources || resources.length === 0) throw new Error('ไม่พบ resource ใน dataset นี้');
+        const resourceId = resources[0].id;
+        log('✅ พบ resource_id: ' + resourceId);
+
+        const dataUrl = `https://data.go.th/api/3/action/datastore_search?resource_id=${resourceId}&limit=1000`;
+        const data = await fetchWithProxies(dataUrl, {
+          headers: { 'API-KEY': API_KEY }
+        });
+
+        const records = data.result.records;
+        let count = 0;
+        const bounds = [];
+
+        records.forEach(item => {
+          const lat = parseFloat(item.lat || item.latitude || item.ละติจูด);
+          const lng = parseFloat(item.long || item.lng || item.longitude || item.ลองจิจูด);
+
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const popupHtml = Object.entries(item)
+              .filter(([k]) => k !== '_id')
+              .map(([k, v]) => `<b>${k}:</b> ${v}`)
+              .join('<br>');
+            L.marker([lat, lng]).addTo(map).bindPopup(popupHtml);
+            bounds.push([lat, lng]);
+            count++;
+          }
+        });
+
+        if (bounds.length > 0) map.fitBounds(bounds, { padding: [30, 30] });
+        log(`✅ สำเร็จ! แสดง ${count} จุด จากทั้งหมด ${records.length} รายการ`);
+        setTimeout(() => statusEl.style.display = 'none', 5000);
+
+      } catch (err) {
+        log('❌ ล้มเหลวทั้งหมด: ' + err.message);
+        statusEl.style.background = '#ffe0e0';
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>
